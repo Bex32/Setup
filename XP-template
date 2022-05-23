@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+from pwn import *
+import ctypes
+
+fname = f'vuln'
+ip = ''
+port = 0
+
+#set target binary and context
+elf = context.binary = ELF(f'./{fname}')
+
+context.log_level = 'debug'
+
+#set libc for Pwntools
+#libc = ELF('libc.so.6')
+
+
+
+gdbscript="""
+b *main
+
+"""
+#set follow-fork-mode child
+
+mode = 'attach'
+
+if mode == 'attach':
+    r = process(f'{fname}',aslr=False)
+    attach(f'{fname}',gdbscript=gdbscript)
+elif mode == 'debug':
+    r = gdb.debug(f'./{fname}',aslr=False,gdbscript=gdbscript)
+elif mode == 'remote':
+    r = remote(ip,port)
+else :
+    r = process(f'{fname}',aslr=False)
+
+rb = lambda x :r.recvb(x)
+rl = lambda : r.recvline()
+ru = lambda x :r.recvuntil(x)
+s = lambda x :r.send(x)
+sl = lambda x : r.sendline(x)
+sla = lambda x,y : r.sendlineafter(x,y)
+inter = lambda : r.interactive()
+
+# this will import the libc rand() function that we can use it in ur python script
+
+#libc = ctypes.CDLL('/lib/x86_64-linux-gnu/libc.so.6')
+
+
+def pwn():
+
+
+    
+    inter()
+
+
+if __name__ == '__main__':
+    pwn()
