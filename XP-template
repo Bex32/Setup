@@ -37,12 +37,13 @@ else :
 rb = lambda x :r.recvb(x)
 rl = lambda : r.recvline()
 ru = lambda x :r.recvuntil(x)
+rc = lambda x :r.recvline_contains(x)
 s = lambda x :r.send(x)
 sl = lambda x : r.sendline(x)
 sla = lambda x,y : r.sendlineafter(x,y)
 inter = lambda : r.interactive()
 
-# this will import the libc rand() function that we can use it in ur python script
+# this will import the libc rand() function that we can use it in our python script
 
 #libc = ctypes.CDLL('/lib/x86_64-linux-gnu/libc.so.6')
 
